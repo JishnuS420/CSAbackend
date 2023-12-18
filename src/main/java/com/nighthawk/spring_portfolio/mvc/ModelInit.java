@@ -12,6 +12,8 @@ import com.nighthawk.spring_portfolio.mvc.note.Note;
 import com.nighthawk.spring_portfolio.mvc.note.NoteJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.person.Person;
 import com.nighthawk.spring_portfolio.mvc.person.PersonDetailsService;
+import com.nighthawk.spring_portfolio.mvc.travisscott.TravisScottEntity;
+import com.nighthawk.spring_portfolio.mvc.travisscott.TravisScottEntityJpaRepository;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class ModelInit {
     @Autowired JokesJpaRepository jokesRepo;
     @Autowired NoteJpaRepository noteRepo;
     @Autowired PersonDetailsService personService;
+    @Autowired TravisScottEntityJpaRepository travisScottRepo;
 
     @Bean
     CommandLineRunner run() {  // The run() method will be executed after the application starts
@@ -49,6 +52,13 @@ public class ModelInit {
                 }
             }
 
+            TravisScottEntity[] travisScottArray = TravisScottEntity.init();
+            for (TravisScottEntity travisScott : travisScottArray) {
+                List<TravisScottEntity> travisScottFound = travisScottRepo.findByAlbum(travisScott.getSong());
+                if (travisScottFound.size() == 0) {
+                    travisScottRepo.save(travisScott);
+                }
+            }
         };
     }
 }
